@@ -9,13 +9,15 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    const fetchAdvocates = async () => {
+      const response = await fetch("/api/advocates");
+      const { data } = await response.json();
+      setAdvocates(data);
+      setFilteredAdvocates(data);
+    };
+
     console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
-      });
-    });
+    fetchAdvocates();
   }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
