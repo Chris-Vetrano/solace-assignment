@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Advocate from "./types/Advocate";
+import { AdvocatesTable } from "./components/AdvocatesTable";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -94,39 +95,7 @@ export default function Home() {
           </div>
 
           <section aria-label="Advocate Search Results">
-            <table className="w-full">
-              <caption>Available Healthcare Advocates</caption>
-              <thead>
-                <tr>
-                  <th scope="col">First Name</th>
-                  <th scope="col">Last Name</th>
-                  <th scope="col">City</th>
-                  <th scope="col">Degree</th>
-                  <th scope="col">Specialties</th>
-                  <th scope="col">Years of Experience</th>
-                  <th scope="col">Phone Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAdvocates.map((advocate) => {
-                  return (
-                    <tr key={advocate.id}>
-                      <td>{advocate.firstName}</td>
-                      <td>{advocate.lastName}</td>
-                      <td>{advocate.city}</td>
-                      <td>{advocate.degree}</td>
-                      <td>
-                        {advocate.specialties.map((specialty) => (
-                          <div key={specialty}>{specialty}</div>
-                        ))}
-                      </td>
-                      <td>{advocate.yearsOfExperience}</td>
-                      <td>{advocate.phoneNumber}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <AdvocatesTable advocates={filteredAdvocates} />
           </section>
         </>
       )}
