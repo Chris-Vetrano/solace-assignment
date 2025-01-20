@@ -19,7 +19,7 @@ export function DegreeFilter({
         {availableDegrees.map((degree) => (
           <label
             key={degree}
-            className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 cursor-pointer"
+            className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
           >
             <input
               type="checkbox"
