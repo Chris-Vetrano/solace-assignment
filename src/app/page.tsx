@@ -69,9 +69,7 @@ export default function Home() {
 
       {!isLoading && !error && (
         <>
-          <br />
-          <br />
-          <div>
+          <div className="my-6">
             <p>Search</p>
             <p>
               Searching for: <span>{searchTerm}</span>
