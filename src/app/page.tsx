@@ -5,7 +5,6 @@ import Advocate from "./types/Advocate";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +21,6 @@ export default function Home() {
         }
         const { data } = await response.json();
         setAdvocates(data);
-        setFilteredAdvocates(data);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch advocates"
@@ -36,29 +34,26 @@ export default function Home() {
     fetchAdvocates();
   }, []);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSearchTerm = e.target.value.toLowerCase();
-    setSearchTerm(newSearchTerm);
+  const filteredAdvocates = advocates.filter((advocate) => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return (
+      advocate.firstName.toLowerCase().includes(lowerCaseSearchTerm) ||
+      advocate.lastName.toLowerCase().includes(lowerCaseSearchTerm) ||
+      advocate.city.toLowerCase().includes(lowerCaseSearchTerm) ||
+      advocate.degree.toLowerCase().includes(lowerCaseSearchTerm) ||
+      advocate.specialties.some((specialty) =>
+        specialty.toLowerCase().includes(lowerCaseSearchTerm)
+      ) ||
+      advocate.yearsOfExperience.toString().includes(lowerCaseSearchTerm)
+    );
+  });
 
-    const filtered = advocates.filter((advocate) => {
-      return (
-        advocate.firstName.toLowerCase().includes(newSearchTerm) ||
-        advocate.lastName.toLowerCase().includes(newSearchTerm) ||
-        advocate.city.toLowerCase().includes(newSearchTerm) ||
-        advocate.degree.toLowerCase().includes(newSearchTerm) ||
-        advocate.specialties.some((s) =>
-          s.toLowerCase().includes(newSearchTerm)
-        ) ||
-        advocate.yearsOfExperience.toString().includes(newSearchTerm)
-      );
-    });
-
-    setFilteredAdvocates(filtered);
+  const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
-  const onClick = () => {
-    console.log(advocates);
-    setFilteredAdvocates(advocates);
+  const handleClickReset = () => {
+    setSearchTerm("");
   };
   return (
     <main className="m-6">
@@ -81,9 +76,10 @@ export default function Home() {
             </p>
             <input
               style={{ border: "border border-black" }}
-              onChange={onChange}
+              onChange={handleChangeSearch}
+              value={searchTerm}
             />
-            <button onClick={onClick}>Reset Search</button>
+            <button onClick={handleClickReset}>Reset Search</button>
           </div>
           <br />
           <br />
