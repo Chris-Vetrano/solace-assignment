@@ -130,6 +130,16 @@ export default function Home() {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      setActiveFilters((prev) => ({
+        ...prev,
+        searchTerm: "",
+      }));
+      setPagination((prev) => ({ ...prev, page: 1 }));
+    }
+  };
+
   if (isInitialLoading) {
     return (
       <main className="m-6">
@@ -178,6 +188,7 @@ export default function Home() {
               id="advocate-search"
               className="w-full max-w-md border border-gray-300 rounded-md p-2"
               onChange={handleSearchChange}
+              onKeyDown={handleSearchKeyDown}
               value={activeFilters.searchTerm || ""}
               placeholder="Search by name, city, specialty..."
               type="search"
