@@ -77,7 +77,7 @@ export default function Home() {
               Searching for: <span>{searchTerm}</span>
             </p>
             <input
-              style={{ border: "border border-black" }}
+              className="border border-black"
               onChange={handleChangeSearch}
               value={searchTerm}
             />
