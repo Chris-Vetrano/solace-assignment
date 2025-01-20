@@ -6,6 +6,7 @@ interface SearchableDropdownProps {
   onSelectionChange: (selected: string[]) => void;
   label: string;
   placeholder?: string;
+  renderSelectedValue?: (value: string) => React.ReactNode;
 }
 
 export function SearchableDropdown({
@@ -14,6 +15,7 @@ export function SearchableDropdown({
   onSelectionChange,
   label,
   placeholder = "Search...",
+  renderSelectedValue,
 }: SearchableDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,14 +54,18 @@ export function SearchableDropdown({
       <div className="relative">
         <button
           type="button"
-          className="w-full px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           onClick={() => setIsOpen(!isOpen)}
         >
           {selectedValues.length > 0 ? (
             <span className="flex flex-wrap gap-1">
               {selectedValues.length > 2
                 ? `${selectedValues.length} selected`
-                : selectedValues.join(", ")}
+                : selectedValues.map((value) => (
+                    <span key={value}>
+                      {renderSelectedValue ? renderSelectedValue(value) : value}
+                    </span>
+                  ))}
             </span>
           ) : (
             <span className="text-gray-500">Select options...</span>
@@ -96,7 +102,11 @@ export function SearchableDropdown({
                       checked={selectedValues.includes(option)}
                       onChange={() => {}} // Handled by parent div click
                     />
-                    <span className="ml-2">{option}</span>
+                    <span className="ml-2">
+                      {renderSelectedValue
+                        ? renderSelectedValue(option)
+                        : option}
+                    </span>
                   </div>
                 ))
               )}
@@ -108,17 +118,25 @@ export function SearchableDropdown({
       {selectedValues.length > 0 && (
         <div className="flex flex-wrap gap-1 mt-2">
           {selectedValues.map((value) => (
-            <span
-              key={value}
-              className="inline-flex items-center px-2 py-1 rounded-full text-sm bg-blue-100 text-blue-700"
-            >
-              {value}
-              <button
-                onClick={() => toggleOption(value)}
-                className="ml-1 hover:text-blue-900"
-              >
-                ×
-              </button>
+            <span key={value}>
+              {renderSelectedValue ? (
+                <div
+                  onClick={() => toggleOption(value)}
+                  className="cursor-pointer"
+                >
+                  {renderSelectedValue(value)}
+                </div>
+              ) : (
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-sm bg-blue-100 text-blue-700">
+                  {value}
+                  <button
+                    onClick={() => toggleOption(value)}
+                    className="ml-1 hover:text-blue-900"
+                  >
+                    ×
+                  </button>
+                </span>
+              )}
             </span>
           ))}
         </div>
