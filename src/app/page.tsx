@@ -36,15 +36,17 @@ export default function Home() {
 
   const filteredAdvocates = advocates.filter((advocate) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    return (
-      advocate.firstName.toLowerCase().includes(lowerCaseSearchTerm) ||
-      advocate.lastName.toLowerCase().includes(lowerCaseSearchTerm) ||
-      advocate.city.toLowerCase().includes(lowerCaseSearchTerm) ||
-      advocate.degree.toLowerCase().includes(lowerCaseSearchTerm) ||
-      advocate.specialties.some((specialty) =>
-        specialty.toLowerCase().includes(lowerCaseSearchTerm)
-      ) ||
-      advocate.yearsOfExperience.toString().includes(lowerCaseSearchTerm)
+    const searchableFields = [
+      advocate.firstName.toLowerCase(),
+      advocate.lastName.toLowerCase(),
+      advocate.city.toLowerCase(),
+      advocate.degree.toLowerCase(),
+      advocate.yearsOfExperience.toString(),
+      ...advocate.specialties.map((speciality) => speciality.toLowerCase()),
+    ];
+
+    return searchableFields.some((field) =>
+      field.includes(lowerCaseSearchTerm)
     );
   });
 
