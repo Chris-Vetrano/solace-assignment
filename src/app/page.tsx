@@ -57,64 +57,77 @@ export default function Home() {
   const handleClickReset = () => {
     setSearchTerm("");
   };
+
   return (
     <main className="m-6">
-      <h1>Solace Advocates</h1>
+      <h1 className="text-2xl font-bold mb-6">Solace Advocates</h1>
 
-      {isLoading && <p>Loading advocates...</p>}
+      {isLoading && (
+        <p role="status" aria-live="polite">
+          Loading advocates...
+        </p>
+      )}
 
       {error && (
-        <p className="text-red-600">Error loading advocates: {error}</p>
+        <p role="alert" className="text-red-600">
+          Error loading advocates: {error}
+        </p>
       )}
 
       {!isLoading && !error && (
         <>
           <div className="my-6">
-            <p>Search</p>
-            <p>
-              Searching for: <span>{searchTerm}</span>
-            </p>
+            <label htmlFor="advocate-search" className="block mb-2">
+              Search advocates
+            </label>
             <input
-              className="border border-black"
+              id="advocate-search"
+              className="border border-black p-2"
               onChange={handleChangeSearch}
               value={searchTerm}
+              placeholder="Search by name, city, specialty..."
+              type="search"
             />
-            <button onClick={handleClickReset}>Reset Search</button>
+            <button onClick={handleClickReset} className="ml-2">
+              Reset Search
+            </button>
           </div>
-          <br />
-          <br />
-          <table>
-            <thead>
-              <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>City</th>
-                <th>Degree</th>
-                <th>Specialties</th>
-                <th>Years of Experience</th>
-                <th>Phone Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAdvocates.map((advocate) => {
-                return (
-                  <tr key={advocate.id}>
-                    <td>{advocate.firstName}</td>
-                    <td>{advocate.lastName}</td>
-                    <td>{advocate.city}</td>
-                    <td>{advocate.degree}</td>
-                    <td>
-                      {advocate.specialties.map((specialty) => (
-                        <div key={specialty}>{specialty}</div>
-                      ))}
-                    </td>
-                    <td>{advocate.yearsOfExperience}</td>
-                    <td>{advocate.phoneNumber}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+
+          <section aria-label="Advocate Search Results">
+            <table className="w-full">
+              <caption>Available Healthcare Advocates</caption>
+              <thead>
+                <tr>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">City</th>
+                  <th scope="col">Degree</th>
+                  <th scope="col">Specialties</th>
+                  <th scope="col">Years of Experience</th>
+                  <th scope="col">Phone Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAdvocates.map((advocate) => {
+                  return (
+                    <tr key={advocate.id}>
+                      <td>{advocate.firstName}</td>
+                      <td>{advocate.lastName}</td>
+                      <td>{advocate.city}</td>
+                      <td>{advocate.degree}</td>
+                      <td>
+                        {advocate.specialties.map((specialty) => (
+                          <div key={specialty}>{specialty}</div>
+                        ))}
+                      </td>
+                      <td>{advocate.yearsOfExperience}</td>
+                      <td>{advocate.phoneNumber}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </section>
         </>
       )}
     </main>
