@@ -1,4 +1,4 @@
-export default interface Pagination {
+export interface Pagination {
   total: number;
   page: number;
   limit: number;
