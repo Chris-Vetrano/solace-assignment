@@ -1,11 +1,13 @@
-export default interface Advocate {
+import { Degree, Specialty } from "@/app/constants/advocates";
+
+export interface Advocate {
   id: number;
   firstName: string;
   lastName: string;
   city: string;
-  degree: string;
-  specialties: string[];
+  degree: Degree;
+  specialties: Specialty[];
   yearsOfExperience: number;
-  phoneNumber: number;
+  phoneNumber: string;
   createdAt: string;
 }
