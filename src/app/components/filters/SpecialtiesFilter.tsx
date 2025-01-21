@@ -1,4 +1,5 @@
 import React from "react";
+import { ColoredPill } from "../common/ColoredPill";
 import { SearchableDropdown } from "../SearchableDropdown";
 
 interface SpecialtiesFilterProps {
@@ -12,6 +13,10 @@ export function SpecialtiesFilter({
   onSpecialtiesChange,
   allSpecialties,
 }: SpecialtiesFilterProps) {
+  const renderSelectedValue = (specialty: string) => (
+    <ColoredPill key={specialty} label={specialty} className="m-0.5" />
+  );
+
   return (
     <SearchableDropdown
       options={allSpecialties}
@@ -19,6 +24,7 @@ export function SpecialtiesFilter({
       onSelectionChange={onSpecialtiesChange}
       label="Specialties"
       placeholder="Search specialties..."
+      renderSelectedValue={renderSelectedValue}
     />
   );
 }
