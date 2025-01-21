@@ -1,13 +1,12 @@
 import { NextRequest } from "next/server";
 import { sql } from "drizzle-orm";
-import { and, desc, asc, SQL } from "drizzle-orm";
+import { and, desc, SQL } from "drizzle-orm";
+import { ExperienceRange } from "@/app/types/ExperienceRange";
+import { SortField } from "@/app/types/SortField";
+import { SortOrder } from "@/app/types/SortOrder";
 import db from "../../../db";
 import { advocates } from "../../../db/schema";
 import { SPECIALTIES, DEGREES } from "../../constants/advocates";
-
-type SortField = "name" | "experience" | "city" | "degree";
-type SortOrder = "asc" | "desc";
-type ExperienceRange = "0-2" | "3-5" | "6-10" | "10+";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
