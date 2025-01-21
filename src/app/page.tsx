@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Advocate from "./types/Advocate";
+import Pagination from "./types/Pagination";
 import { AdvocatesTable } from "./components/AdvocatesTable";
 
 export default function Home() {
@@ -9,6 +10,12 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<Pagination>({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+  });
 
   useEffect(() => {
     const fetchAdvocates = async () => {
@@ -16,12 +23,15 @@ export default function Home() {
       setError(null);
 
       try {
-        const response = await fetch("/api/advocates");
+        const response = await fetch(
+          `/api/advocates?page=${pagination.page}&limit=${pagination.limit}`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const { data } = await response.json();
+        const { data, pagination: paginationData } = await response.json();
         setAdvocates(data);
+        setPagination(paginationData);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch advocates"
@@ -31,9 +41,8 @@ export default function Home() {
       }
     };
 
-    console.log("fetching advocates...");
     fetchAdvocates();
-  }, []);
+  }, [pagination.page, pagination.limit]);
 
   const filteredAdvocates = advocates.filter((advocate) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -57,6 +66,10 @@ export default function Home() {
 
   const handleClickReset = () => {
     setSearchTerm("");
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
   return (
@@ -95,7 +108,11 @@ export default function Home() {
           </div>
 
           <section aria-label="Advocate Search Results">
-            <AdvocatesTable advocates={filteredAdvocates} />
+            <AdvocatesTable
+              advocates={filteredAdvocates}
+              pagination={pagination}
+              onPageChange={handlePageChange}
+            />
           </section>
         </>
       )}
