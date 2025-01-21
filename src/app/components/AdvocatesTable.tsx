@@ -1,5 +1,5 @@
-import Advocate from "../types/Advocate";
-import Pagination from "../types/Pagination";
+import { Advocate } from "../types/Advocate";
+import { Pagination } from "../types/Pagination";
 
 interface AdvocatesTableProps {
   advocates: Advocate[];
