@@ -16,26 +16,44 @@ Run the development server:
 npm run dev
 ```
 
-## Database set up
+## Database Setup
 
-The app is configured to return a default list of advocates. This will allow you to get the app up and running without needing to configure a database. If you’d like to configure a database, you’re encouraged to do so. You can uncomment the url in `.env` and the line in `src/app/api/advocates/route.ts` to test retrieving advocates from the database.
+The project uses PostgreSQL for data storage. You have two options:
 
-1. Feel free to use whatever configuration of postgres you like. The project is set up to use docker-compose.yml to set up postgres. The url is in .env.
+### Option 1: Using Docker (Recommended)
+
+1. Start the PostgreSQL container:
 
 ```bash
 docker compose up -d
 ```
 
-2. Create a `solaceassignment` database.
-
-3. Push migration to the database
+2. Run database migrations:
 
 ```bash
-npx drizzle-kit push
+npm run migrate:up
 ```
 
-4. Seed the database
+3. Seed the database:
 
 ```bash
-curl -X POST http://localhost:3000/api/seed
+npm run seed
+```
+
+### Option 2: Using Your Own PostgreSQL Instance
+
+1. Create a database named `solaceassignment`
+
+2. Update the `DATABASE_URL` in your `.env` file to point to your PostgreSQL instance
+
+3. Run database migrations:
+
+```bash
+npm run migrate:up
+```
+
+4. Seed the database:
+
+```bash
+npm run seed
 ```
