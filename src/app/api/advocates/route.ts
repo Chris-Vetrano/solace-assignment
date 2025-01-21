@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
   const experienceRange = searchParams.get(
     "experienceRange"
   ) as ExperienceRange;
-
   const sortBy = (searchParams.get("sortBy") as SortField) || "name";
   const sortOrder = (searchParams.get("sortOrder") as SortOrder) || "asc";
 
@@ -47,15 +46,27 @@ export async function GET(request: NextRequest) {
     }
 
     if (cities.length > 0) {
-      conditions.push(sql`${advocates.city} = ANY(${cities})`);
+      const citiesArray = sql`ARRAY[${sql.join(
+        cities.map((city) => sql`${city}`),
+        sql`, `
+      )}]`;
+      conditions.push(sql`${advocates.city} = ANY(${citiesArray})`);
     }
 
     if (degrees.length > 0) {
-      conditions.push(sql`${advocates.degree} = ANY(${degrees})`);
+      const degreesArray = sql`ARRAY[${sql.join(
+        degrees.map((degree) => sql`${degree}`),
+        sql`, `
+      )}]`;
+      conditions.push(sql`${advocates.degree} = ANY(${degreesArray})`);
     }
 
     if (specialties.length > 0) {
-      conditions.push(sql`${advocates.specialties} ?| ${specialties}`);
+      const specialtiesArray = sql`ARRAY[${sql.join(
+        specialties.map((specialty) => sql`${specialty}`),
+        sql`, `
+      )}]`;
+      conditions.push(sql`${advocates.specialties} ?| ${specialtiesArray}`);
     }
 
     if (experienceRange) {
