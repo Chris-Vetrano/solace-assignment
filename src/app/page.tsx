@@ -23,9 +23,16 @@ export default function Home() {
       setError(null);
 
       try {
-        const response = await fetch(
-          `/api/advocates?page=${pagination.page}&limit=${pagination.limit}`
-        );
+        const params = new URLSearchParams({
+          page: pagination.page.toString(),
+          limit: pagination.limit.toString(),
+        });
+
+        if (searchTerm) {
+          params.append("search", searchTerm);
+        }
+
+        const response = await fetch(`/api/advocates?${params}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -41,24 +48,13 @@ export default function Home() {
       }
     };
 
-    fetchAdvocates();
-  }, [pagination.page, pagination.limit]);
+    // Debounce API requests
+    const timeoutId = setTimeout(() => {
+      fetchAdvocates();
+    }, 300);
 
-  const filteredAdvocates = advocates.filter((advocate) => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const searchableFields = [
-      advocate.firstName.toLowerCase(),
-      advocate.lastName.toLowerCase(),
-      advocate.city.toLowerCase(),
-      advocate.degree.toLowerCase(),
-      advocate.yearsOfExperience.toString(),
-      ...advocate.specialties.map((speciality) => speciality.toLowerCase()),
-    ];
-
-    return searchableFields.some((field) =>
-      field.includes(lowerCaseSearchTerm)
-    );
-  });
+    return () => clearTimeout(timeoutId);
+  }, [pagination.page, pagination.limit, searchTerm]);
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -109,7 +105,7 @@ export default function Home() {
 
           <section aria-label="Advocate Search Results">
             <AdvocatesTable
-              advocates={filteredAdvocates}
+              advocates={advocates}
               pagination={pagination}
               onPageChange={handlePageChange}
             />
