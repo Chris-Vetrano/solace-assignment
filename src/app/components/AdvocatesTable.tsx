@@ -1,3 +1,5 @@
+import React from "react";
+import { ColoredPill } from "./common/ColoredPill";
 import { Advocate } from "../types/Advocate";
 import { Pagination } from "../types/Pagination";
 
@@ -83,11 +85,14 @@ export function AdvocatesTable({
                 {advocate.degree}
               </td>
               <td className="px-6 py-4 text-sm text-gray-900">
-                <ul className="list-disc pl-4 space-y-1">
+                <div className="flex flex-wrap gap-1.5">
                   {advocate.specialties.map((specialty) => (
-                    <li key={`${advocate.id}-${specialty}`}>{specialty}</li>
+                    <ColoredPill
+                      key={`${advocate.id}-${specialty}`}
+                      label={specialty}
+                    />
                   ))}
-                </ul>
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {advocate.yearsOfExperience}
@@ -108,14 +113,14 @@ export function AdvocatesTable({
           <button
             onClick={() => onPageChange(pagination.page - 1)}
             disabled={pagination.page <= 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Previous
           </button>
           <button
             onClick={() => onPageChange(pagination.page + 1)}
             disabled={pagination.page >= pagination.totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Next
           </button>
