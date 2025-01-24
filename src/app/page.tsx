@@ -163,55 +163,70 @@ export default function Home() {
   }
 
   return (
-    <main className="m-6">
-      <h1 className="text-2xl font-bold mb-6">Healthcare Advocates</h1>
+    <main className="h-screen bg-gray-50 overflow-hidden">
+      <div className="h-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          Healthcare Advocates
+        </h1>
 
-      <div className="flex gap-6">
-        <aside className="w-80">
-          <FiltersPanel
-            activeFilters={activeFilters}
-            filterOptions={filterOptions}
-            onFilterChange={handleFilterChange}
-            onResetFilters={handleResetFilters}
-          />
-        </aside>
-
-        <div className="flex-1">
-          <div className="mb-6">
-            <label
-              htmlFor="advocate-search"
-              className="block mb-2 font-medium text-gray-700"
-            >
-              Search advocates
-            </label>
-            <input
-              id="advocate-search"
-              className="w-full max-w-md border border-gray-300 rounded-md p-2"
-              onChange={handleSearchChange}
-              onKeyDown={handleSearchKeyDown}
-              value={activeFilters.searchTerm || ""}
-              placeholder="Search by name, city, specialty..."
-              type="search"
+        <div className="flex flex-col lg:flex-row gap-8 h-[calc(100%-5rem)]">
+          <aside className="w-full lg:w-80 overflow-auto">
+            <FiltersPanel
+              activeFilters={activeFilters}
+              filterOptions={filterOptions}
+              onFilterChange={handleFilterChange}
+              onResetFilters={handleResetFilters}
             />
-          </div>
+          </aside>
 
-          <section aria-label="Advocate Search Results">
-            {isUpdating ? (
-              <div className="flex items-center justify-center py-8">
-                <p className="text-gray-600">Updating results...</p>
+          <div className="flex-1 space-y-6 overflow-auto">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
-            ) : error ? (
-              <p role="alert" className="text-red-600">
-                Error loading advocates: {error}
-              </p>
-            ) : (
-              <AdvocatesTable
-                advocates={advocates}
-                pagination={pagination}
-                onPageChange={handlePageChange}
+              <input
+                id="advocate-search"
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-shadow duration-150 ease-in-out"
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
+                value={activeFilters.searchTerm || ""}
+                placeholder="Search by name, city, specialty..."
+                type="search"
               />
-            )}
-          </section>
+            </div>
+
+            <section
+              aria-label="Advocate Search Results"
+              className="bg-white rounded-lg shadow-sm border border-gray-200"
+            >
+              {isUpdating ? (
+                <div className="flex items-center justify-center py-8">
+                  <p className="text-gray-600">Updating results...</p>
+                </div>
+              ) : error ? (
+                <p role="alert" className="text-red-600">
+                  Error loading advocates: {error}
+                </p>
+              ) : (
+                <AdvocatesTable
+                  advocates={advocates}
+                  pagination={pagination}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </section>
+          </div>
         </div>
       </div>
     </main>
