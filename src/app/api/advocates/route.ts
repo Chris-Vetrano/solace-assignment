@@ -39,7 +39,9 @@ export async function GET(request: NextRequest) {
         }) LIKE ${`%${searchTerm}%`} OR
           LOWER(${advocates.city}) LIKE ${`%${searchTerm}%`} OR
           LOWER(${advocates.degree}) LIKE ${`%${searchTerm}%`} OR
-          ${advocates.specialties}::text ILIKE ${`%${searchTerm}%`}
+          (${
+            advocates.specialties
+          }::jsonb #>> '{}')::text ILIKE ${`%${searchTerm}%`}
         )`
       );
     }
@@ -61,11 +63,16 @@ export async function GET(request: NextRequest) {
     }
 
     if (specialties.length > 0) {
+      console.log("Received specialties:", specialties);
+
       const specialtiesArray = sql`ARRAY[${sql.join(
         specialties.map((specialty) => sql`${specialty}`),
         sql`, `
       )}]`;
-      conditions.push(sql`${advocates.specialties} ?| ${specialtiesArray}`);
+
+      const specialtiesCondition = sql`(${advocates.specialties}::jsonb #>> '{}')::jsonb ?| ${specialtiesArray}`;
+
+      conditions.push(specialtiesCondition);
     }
 
     if (experienceRange) {
